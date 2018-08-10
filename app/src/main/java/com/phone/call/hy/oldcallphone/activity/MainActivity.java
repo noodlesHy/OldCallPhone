@@ -1,7 +1,9 @@
-package com.phone.call.hy.oldcallphone;
+package com.phone.call.hy.oldcallphone.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.phone.call.hy.oldcallphone.R;
 
 public class MainActivity extends AppCompatActivity {
 
