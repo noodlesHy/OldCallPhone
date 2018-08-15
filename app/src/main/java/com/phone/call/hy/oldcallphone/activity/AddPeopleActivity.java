@@ -8,9 +8,12 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -18,12 +21,16 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.phone.call.hy.oldcallphone.R;
+import com.phone.call.hy.oldcallphone.db.DbHelpManager;
 import com.phone.call.hy.oldcallphone.fragment.SelectPhotoFragment;
+import com.phone.call.hy.oldcallphone.javabean.PeopleInfo;
 import com.phone.call.hy.oldcallphone.unit.FileUtil;
 
 public class AddPeopleActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int REQUEST_ALBUM_OK = 101;
     private ImageView iv_peple_icon;
+    private EditText et_user_name,et_user_phone;
+    private Bitmap mBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +41,9 @@ public class AddPeopleActivity extends AppCompatActivity implements View.OnClick
 
     private void initView(){
         findViewById(R.id.iv_add_photo).setOnClickListener(this);
+        findViewById(R.id.btn_confirm).setOnClickListener(this);
+        et_user_name = findViewById(R.id.et_user_name);
+        et_user_phone = findViewById(R.id.et_user_phone);
         iv_peple_icon = findViewById(R.id.iv_peple_icon);
     }
 
@@ -42,10 +52,56 @@ public class AddPeopleActivity extends AppCompatActivity implements View.OnClick
         switch (v.getId()){
             case R.id.iv_add_photo:
                 initDialog();
-
+                break;
+            case R.id.btn_confirm:
+                confim();
                 break;
         }
     }
+
+    private void confim(){
+        String number = et_user_phone.getText().toString();
+        if(TextUtils.isEmpty(number)){
+            Toast.makeText(this,"请输入手机号码",Toast.LENGTH_LONG);
+            return;
+        }
+        String name = et_user_name.getText().toString();
+        if(TextUtils.isEmpty(name)){
+            Toast.makeText(this,"请输入姓名",Toast.LENGTH_LONG);
+            return;
+        }
+        if(iv_peple_icon.getVisibility()==View.INVISIBLE){
+            Toast.makeText(this,"请设置头像",Toast.LENGTH_LONG);
+            return;
+        }
+        String imgurl = FileUtil.getNowTimeMS()+".png";
+        boolean isOk = FileUtil.saveBitmapToSDCardPrivateCacheDir(mBitmap,imgurl,AddPeopleActivity.this);
+        if(isOk){
+            Log.i(TAG, "onActivityResult: 保存成功");
+        }else {
+            Log.i(TAG, "onActivityResult: 保存失败");
+        }
+        PeopleInfo info = new PeopleInfo();
+        info.setPhone(number);
+        info.setName(name);
+        info.setImgurl(imgurl);
+        addPeople(info);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mBitmap!=null||mBitmap.isRecycled()){
+            mBitmap.recycle();
+            mBitmap = null;
+        }
+    }
+
+    private void addPeople(PeopleInfo info){
+        DbHelpManager dbHelpManager = new DbHelpManager(this);
+        dbHelpManager.addPeople(info);
+    }
+
 
     private void openCreame(){
         Intent albumIntent = new Intent(Intent.ACTION_PICK, null);
@@ -70,13 +126,9 @@ public class AddPeopleActivity extends AppCompatActivity implements View.OnClick
                 SimpleTarget target = new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        mBitmap = resource;
                         iv_peple_icon.setImageBitmap(resource);
-                        boolean isOk = FileUtil.saveBitmapToSDCardPrivateCacheDir(resource,FileUtil.getNowTimeMS()+".png",AddPeopleActivity.this);
-                        if(isOk){
-                            Log.i(TAG, "onActivityResult: 保存成功");
-                        }else {
-                            Log.i(TAG, "onActivityResult: 保存失败");
-                        }
+
                     }
 
                 };
