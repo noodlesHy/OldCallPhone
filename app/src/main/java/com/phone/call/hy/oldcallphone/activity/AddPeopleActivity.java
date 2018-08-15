@@ -50,6 +50,7 @@ public class AddPeopleActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            //xiutgai
             case R.id.iv_add_photo:
                 initDialog();
                 break;
