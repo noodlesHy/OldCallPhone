@@ -22,7 +22,6 @@
         android:layout_weight="1"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="20dp"
-        android:scaleType="fitXY"
         android:visibility="gone"
         android:layout_below="@+id/textinput_phone"
         />
