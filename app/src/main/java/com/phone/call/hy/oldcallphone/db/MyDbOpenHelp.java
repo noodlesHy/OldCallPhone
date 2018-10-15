@@ -15,8 +15,8 @@ public class MyDbOpenHelp extends SQLiteOpenHelper {
     private static final String DB_NAME = "hysqlite";
 
     public static final String PEOPLE_NAME = "name";
-    public static final String PEOPLE_PHONE = "name";
-    public static final String PEOPLE_IMGURL = "name";
+    public static final String PEOPLE_PHONE = "phone";
+    public static final String PEOPLE_IMGURL = "imgurl";
     public static final String ID = "_id";
 
     /**
