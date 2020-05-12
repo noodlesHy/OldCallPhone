@@ -1,16 +1,14 @@
-package com.yunx.wanjia.units;
+package com.phone.call.hy.oldcallphone.unit;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.yunx.wanjia.R;
-import com.yunx.wanjia.dlmanager.tool.DistanceTool;
+import com.phone.call.hy.oldcallphone.R;
+
 
 import java.io.File;
 
@@ -19,8 +17,8 @@ public class GlideTool {
     public static void headerDisplay(Context context, String url, ImageView im){
 
         RequestOptions options = new RequestOptions();
-        options.placeholder(R.mipmap.gerenzhongxin_zhanghaotouxiang);
-        options.fallback(R.mipmap.gerenzhongxin_zhanghaotouxiang);
+        options.placeholder(R.mipmap.ic_launcher_round);
+        options.fallback(R.mipmap.ic_launcher_round);
         options.fitCenter();
         Glide
                 .with(context)
@@ -34,8 +32,8 @@ public class GlideTool {
     public static void headerDisplay(Context context, File file, ImageView im){
 
         RequestOptions options = new RequestOptions();
-        options.placeholder(R.mipmap.gerenzhongxin_zhanghaotouxiang);
-        options.fallback(R.mipmap.gerenzhongxin_zhanghaotouxiang);
+        options.placeholder(R.mipmap.ic_launcher_round);
+        options.fallback(R.mipmap.ic_launcher_round);
         options.fitCenter();
         Glide
                 .with(context)
@@ -49,8 +47,8 @@ public class GlideTool {
     public static void userIconDisplay(Context context, String url, ImageView im){
 
         RequestOptions options = new RequestOptions();
-        options.placeholder(R.mipmap.gerenzhongxin_zhanghaotouxiang);
-        options.fallback(R.mipmap.gerenzhongxin_zhanghaotouxiang);
+        options.placeholder(R.mipmap.ic_launcher_round);
+        options.fallback(R.mipmap.ic_launcher_round);
         options.fitCenter();
         Glide
                 .with(context)
@@ -61,27 +59,27 @@ public class GlideTool {
 
     }
 
-    public static void getBitmap(Context context, File file,boolean isFit,SimpleTarget<Bitmap> target){
-
-        RequestOptions options = new RequestOptions();
-        options.skipMemoryCache(true);
-        options.diskCacheStrategy(DiskCacheStrategy.NONE);
-        options.override(DistanceTool.getScreenWidth(context), DistanceTool.getScreenHeight(context));
-
-        if(isFit){
-
-            options.fitCenter();
-
-        }
-
-        Glide
-                .with(context)
-                .asBitmap()
-                .load(file)
-                .apply(options)
-                .into(target);
-
-    }
+//    public static void getBitmap(Context context, File file,boolean isFit,SimpleTarget<Bitmap> target){
+//
+//        RequestOptions options = new RequestOptions();
+//        options.skipMemoryCache(true);
+//        options.diskCacheStrategy(DiskCacheStrategy.NONE);
+//        options.override(DistanceTool.getScreenWidth(context), DistanceTool.getScreenHeight(context));
+//
+//        if(isFit){
+//
+//            options.fitCenter();
+//
+//        }
+//
+//        Glide
+//                .with(context)
+//                .asBitmap()
+//                .load(file)
+//                .apply(options)
+//                .into(target);
+//
+//    }
 
 
 
@@ -89,8 +87,8 @@ public class GlideTool {
         RequestOptions options = new RequestOptions();
         options.skipMemoryCache(true);
         options.diskCacheStrategy(DiskCacheStrategy.NONE);
-        options.placeholder(R.mipmap.imgzhanweitu);
-        options.fallback(R.mipmap.imgzhanweitu);
+        options.placeholder(R.mipmap.ic_launcher_round);
+        options.fallback(R.mipmap.ic_launcher_round);
         options.fitCenter();
         Glide
                 .with(context)
@@ -102,8 +100,8 @@ public class GlideTool {
 
     public static void feedbackReleaseImgDisplay(Context context, String url, ImageView im){
         RequestOptions options = new RequestOptions();
-        options.placeholder(R.mipmap.imgzhanweitu);
-        options.fallback(R.mipmap.imgzhanweitu);
+        options.placeholder(R.mipmap.ic_launcher_round);
+        options.fallback(R.mipmap.ic_launcher_round);
         options.fitCenter();
         Glide
                 .with(context)
@@ -130,8 +128,8 @@ public class GlideTool {
     public static void videoCoverDisplay(Context context, String url, ImageView im){
 
         RequestOptions options = new RequestOptions();
-        options.placeholder(R.mipmap.imgzhanweitu);
-        options.fallback(R.mipmap.imgzhanweitu);
+        options.placeholder(R.mipmap.ic_launcher_round);
+        options.fallback(R.mipmap.ic_launcher_round);
         options.fitCenter();
         Glide
                 .with(context)
@@ -143,8 +141,8 @@ public class GlideTool {
 
     public static void listIconDisplay(Context context, String url, ImageView im){
         RequestOptions options = new RequestOptions();
-        options.placeholder(R.mipmap.imgzhanweitu);
-        options.fallback(R.mipmap.imgzhanweitu);
+        options.placeholder(R.mipmap.ic_launcher_round);
+        options.fallback(R.mipmap.ic_launcher_round);
         options.fitCenter();
         Glide
                 .with(context)
@@ -156,8 +154,8 @@ public class GlideTool {
 
     public static void circularDisplay(Context context,String url ,ImageView im){
         RequestOptions options = RequestOptions.bitmapTransform(new RoundedCorners(20));
-        options.placeholder(R.mipmap.imgzhanweitu);
-        options.fallback(R.mipmap.imgzhanweitu);
+        options.placeholder(R.mipmap.ic_launcher_round);
+        options.fallback(R.mipmap.ic_launcher_round);
         Glide
                 .with(context)
                 .load(url)

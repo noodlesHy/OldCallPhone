@@ -18,6 +18,20 @@ public class MyDbOpenHelp extends SQLiteOpenHelper {
     public static final String PEOPLE_PHONE = "phone";
     public static final String PEOPLE_IMGURL = "imgurl";
     public static final String ID = "_id";
+    private volatile static MyDbOpenHelp uniqueInstance;
+
+
+    public static MyDbOpenHelp getInstance(Context context) {
+        if (uniqueInstance == null) {
+            synchronized (MyDbOpenHelp.class) {
+                if (uniqueInstance == null) {
+                    uniqueInstance = new MyDbOpenHelp(context);
+                }
+            }
+        }
+        return uniqueInstance;
+    }
+
 
     /**
      * 构造函数

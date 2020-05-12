@@ -28,8 +28,8 @@ import com.phone.call.hy.oldcallphone.unit.FileUtil;
 
 public class AddPeopleActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int REQUEST_ALBUM_OK = 101;
-    private ImageView iv_peple_icon;
-    private EditText et_user_name,et_user_phone;
+    private EditText et_user_name, et_user_phone;
+    private ImageView iv_add_photo;
     private Bitmap mBitmap;
 
     @Override
@@ -39,17 +39,17 @@ public class AddPeopleActivity extends AppCompatActivity implements View.OnClick
         initView();
     }
 
-    private void initView(){
+    private void initView() {
         findViewById(R.id.iv_add_photo).setOnClickListener(this);
         findViewById(R.id.btn_confirm).setOnClickListener(this);
         et_user_name = findViewById(R.id.et_user_name);
         et_user_phone = findViewById(R.id.et_user_phone);
-        iv_peple_icon = findViewById(R.id.iv_peple_icon);
+        iv_add_photo = findViewById(R.id.iv_add_photo);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             //xiutgai
             case R.id.iv_add_photo:
                 initDialog();
@@ -60,26 +60,27 @@ public class AddPeopleActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    private void confim(){
+    private void confim() {
         String number = et_user_phone.getText().toString();
-        if(TextUtils.isEmpty(number)){
-            Toast.makeText(this,"请输入手机号码",Toast.LENGTH_LONG);
+        if (TextUtils.isEmpty(number)) {
+            Toast.makeText(this, "请输入手机号码", Toast.LENGTH_LONG);
             return;
         }
         String name = et_user_name.getText().toString();
-        if(TextUtils.isEmpty(name)){
-            Toast.makeText(this,"请输入姓名",Toast.LENGTH_LONG);
+        if (TextUtils.isEmpty(name)) {
+            Toast.makeText(this, "请输入姓名", Toast.LENGTH_LONG);
             return;
         }
-        if(iv_peple_icon.getVisibility()==View.INVISIBLE){
-            Toast.makeText(this,"请设置头像",Toast.LENGTH_LONG);
+        if(mBitmap==null){
+            Toast.makeText(this,"请选择照片",Toast.LENGTH_LONG);
             return;
         }
-        String imgurl = FileUtil.getNowTimeMS()+".png";
-        boolean isOk = FileUtil.saveBitmapToSDCardPrivateCacheDir(mBitmap,imgurl,AddPeopleActivity.this);
-        if(isOk){
+
+        String imgurl = FileUtil.getNowTimeMS() + ".png";
+        boolean isOk = FileUtil.saveBitmapToSDCardPrivateCacheDir(mBitmap, imgurl, AddPeopleActivity.this);
+        if (isOk) {
             Log.i(TAG, "onActivityResult: 保存成功");
-        }else {
+        } else {
             Log.i(TAG, "onActivityResult: 保存失败");
         }
         PeopleInfo info = new PeopleInfo();
@@ -92,43 +93,43 @@ public class AddPeopleActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(mBitmap!=null||mBitmap.isRecycled()){
+        if (mBitmap != null || mBitmap.isRecycled()) {
             mBitmap.recycle();
             mBitmap = null;
         }
     }
 
-    private void addPeople(PeopleInfo info){
-        DbHelpManager dbHelpManager = new DbHelpManager(this);
+    private void addPeople(PeopleInfo info) {
+        DbHelpManager dbHelpManager = new DbHelpManager(getApplicationContext());
         dbHelpManager.addPeople(info);
     }
 
 
-    private void openCreame(){
+    private void openCreame() {
         Intent albumIntent = new Intent(Intent.ACTION_PICK, null);
         albumIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
         startActivityForResult(albumIntent, REQUEST_ALBUM_OK);
     }
 
     private static final String TAG = "AddPeopleActivity";
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode){
+        switch (requestCode) {
             case REQUEST_ALBUM_OK:
-                    Uri uri = data.getData();
+                Uri uri = data.getData();
 //                Log.i("图片的uri",uri.get)
-                iv_peple_icon.setVisibility(View.VISIBLE);
+                iv_add_photo.setVisibility(View.VISIBLE);
                 RequestOptions options = new RequestOptions();
                 options.placeholder(R.mipmap.ic_launcher);
                 options.diskCacheStrategy(DiskCacheStrategy.NONE);
                 options.error(R.mipmap.ic_launcher);
-//                options.override(400,600);
                 options.centerCrop();
                 SimpleTarget target = new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         mBitmap = resource;
-                        iv_peple_icon.setImageBitmap(resource);
+                        iv_add_photo.setImageBitmap(resource);
 
                     }
 
@@ -136,17 +137,13 @@ public class AddPeopleActivity extends AppCompatActivity implements View.OnClick
 
                 Glide.with(this).asBitmap().load(uri).apply(options).into(target);
 
-//                    if(uri!=null){
-//                        iv_peple_icon.setVisibility(View.VISIBLE);
-//                        iv_peple_icon.setImageURI(uri);
-//                    }
                 break;
         }
     }
 
-    private void initDialog(){
+    private void initDialog() {
         SelectPhotoFragment selectPhotoFragment = new SelectPhotoFragment();
-        selectPhotoFragment.show(getSupportFragmentManager(),"photo");
+        selectPhotoFragment.show(getSupportFragmentManager(), "photo");
         selectPhotoFragment.setCallback(new SelectPhotoFragment.Callback() {
             @Override
             public void onPhoto() {

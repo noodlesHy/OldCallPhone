@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.phone.call.hy.oldcallphone.javabean.PeopleInfo;
 
@@ -18,7 +19,7 @@ public class DbHelpManager {
     private MyDbOpenHelp myDbOpenHelp;
 
     public DbHelpManager(Context context) {
-        myDbOpenHelp = new MyDbOpenHelp(context);
+        myDbOpenHelp = MyDbOpenHelp.getInstance(context.getApplicationContext());
         //第一次调用执行help的oncrete创建表
         myDbOpenHelp.getWritableDatabase();
     }
@@ -28,7 +29,12 @@ public class DbHelpManager {
         packDoing(new CallBack() {
             @Override
             public void doit(SQLiteDatabase db) {
-                db.execSQL("INSERT INTO " + MyDbOpenHelp.PEOPLE + " VALUES(null,?,?,?)", new Object[]{info.getName(), info.getPhone(), info.getImgurl()});
+                ContentValues cv = new ContentValues();
+                cv.put(MyDbOpenHelp.PEOPLE_NAME, info.getName());
+                cv.put(MyDbOpenHelp.PEOPLE_PHONE, info.getPhone());
+                cv.put(MyDbOpenHelp.PEOPLE_IMGURL, info.getImgurl());
+               long log =  db.insert(MyDbOpenHelp.PEOPLE, null,cv);
+                Log.i(TAG, "doit: "+ log);
                 db.setTransactionSuccessful();
             }
         });
@@ -46,7 +52,6 @@ public class DbHelpManager {
 
     private SQLiteDatabase getDatabase() {
         SQLiteDatabase db = myDbOpenHelp.getWritableDatabase();
-        db.beginTransaction();
         return db;
     }
 
@@ -61,6 +66,7 @@ public class DbHelpManager {
                 cv.put(MyDbOpenHelp.PEOPLE_IMGURL, info.getImgurl());
                 db.update(MyDbOpenHelp.PEOPLE, cv, MyDbOpenHelp.ID + "=?", new String[]{info.getId() + ""});
                 db.setTransactionSuccessful();
+                closeDatabase(db);
             }
         });
 
@@ -72,7 +78,7 @@ public class DbHelpManager {
             @Override
             public void doit(SQLiteDatabase db) {
 
-                Cursor cursor = db.rawQuery("SELECT * FROM "+MyDbOpenHelp.PEOPLE, null);
+                Cursor cursor = db.rawQuery("SELECT * FROM "+MyDbOpenHelp.PEOPLE+"", null);
                 if(cursor!=null&&cursor.getCount()!=0){
                     while (cursor.moveToNext()){
                         PeopleInfo info = new PeopleInfo();
@@ -81,10 +87,12 @@ public class DbHelpManager {
                         info.setPhone(cursor.getString(cursor.getColumnIndex(MyDbOpenHelp.PEOPLE_PHONE)));
                         info.setImgurl(cursor.getString(cursor.getColumnIndex(MyDbOpenHelp.PEOPLE_IMGURL)));
                         infos.add(info);
+                        Log.i(TAG, "doit: infos" + info.getImgurl());
                     }
                 }
             }
         });
+
         return infos;
     }
 
@@ -98,7 +106,7 @@ public class DbHelpManager {
                 e.printStackTrace();
             } finally {
                 db.endTransaction();
-                db.close();
+                Log.i(TAG, "packDoing: 结束事务");
             }
         }
     }
@@ -109,7 +117,6 @@ public class DbHelpManager {
 
     private void closeDatabase(SQLiteDatabase db) {
         db.endTransaction();
-        db.close();
     }
 
 }
