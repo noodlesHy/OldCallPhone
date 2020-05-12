@@ -34,7 +34,7 @@ public class HomeActivity extends AppCompatActivity
     private static final String TAG = "HomeActivity";
     private RecyclerView rl_home_list;
     private HomePeopleAdapter homePeopleAdapter;
-
+    private String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
